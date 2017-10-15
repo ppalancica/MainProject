@@ -5,6 +5,11 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Window;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
@@ -13,6 +18,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+
+import middleware.DatabaseException;
+import middleware.externalinterfaces.IDbClass;
+
+import business.externalinterfaces.IProductSubsystem;
+import business.productsubsystem.DbClassCatalogTypes;
+import business.productsubsystem.ProductSubsystemFacade;
 
 import application.BrowseAndSelectController;
 import application.GuiUtil;
@@ -39,7 +51,7 @@ public class CatalogListWindow extends JInternalFrame implements ParentWindow {
 	
 	//should be set to 'false' if data for table is obtained from a database
 	//or some external file
-	private final boolean USE_DEFAULT_DATA = true;
+	private final boolean USE_DEFAULT_DATA = false;
 	
 	private static final String MAIN_LABEL = "Browse Catalog";
 	private final String BROWSE = "Browse";
@@ -156,9 +168,19 @@ public class CatalogListWindow extends JInternalFrame implements ParentWindow {
 	 */
 	private void updateModel() {
 		List<String[]> theData = new ArrayList<String[]>();
-        if(USE_DEFAULT_DATA) {
+		
+        if (USE_DEFAULT_DATA) {
 			theData = DefaultData.getCatalogTypes();
+        } else {
+        	DbClassCatalogTypes dbClass = new DbClassCatalogTypes();
+        	
+        	try {
+        		theData = dbClass.getCatalogTypes().getCatalogNames();
+			} catch (DatabaseException e) {
+				System.out.println("Could not get Catalog names");
+			}
         }
+        
 		updateModel(theData);
  	}	
 	

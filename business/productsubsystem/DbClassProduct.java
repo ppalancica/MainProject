@@ -21,7 +21,7 @@ import middleware.externalinterfaces.IDataAccessSubsystem;
 import middleware.externalinterfaces.IDbClass;
 import middleware.externalinterfaces.DbConfigKey;
 
-class DbClassProduct implements IDbClass {
+public class DbClassProduct implements IDbClass {
 	private static final Logger LOG = Logger.getLogger(DbClassProduct.class
 			.getPackage().getName());
 	private IDataAccessSubsystem dataAccessSS = new DataAccessSubsystemFacade();
@@ -138,7 +138,7 @@ class DbClassProduct implements IDbClass {
 
 	private void populateProdList(ResultSet rs) throws DatabaseException {
 		productList = new LinkedList<IProductFromDb>();
-		/*
+		
 		try {
 			IProductFromDb product = null;
 			Integer prodId = null;
@@ -148,6 +148,7 @@ class DbClassProduct implements IDbClass {
 			String mfgDate = null;
 			Integer catalogId = null;
 			String description = null;
+			
 			while (rs.next()) {
 				prodId = rs.getInt("productid");
 				productName = rs.getString("productname");
@@ -156,13 +157,14 @@ class DbClassProduct implements IDbClass {
 				mfgDate = rs.getString("mfgdate");
 				catalogId = rs.getInt("catalogid");
 				description = rs.getString("description");
-				product = new Product(prodId, productName, quantityAvail,
-						unitPrice, mfgDate, catalogId, description);
+			
+				product = new Product(prodId, productName, quantityAvail, unitPrice, mfgDate, catalogId, description);
+				
 				productList.add(product);
 			}
 		} catch (SQLException e) {
 			throw new DatabaseException(e);
-		} */
+		}
 	}
 
 	/**

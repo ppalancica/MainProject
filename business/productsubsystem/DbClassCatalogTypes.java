@@ -25,7 +25,14 @@ public class DbClassCatalogTypes implements IDbClass {
     
     public CatalogTypes getCatalogTypes() throws DatabaseException {
     	//IMPLEMENT
-        return new CatalogTypes();       
+    	
+    	queryType = GET_TYPES;
+    	
+    	IDataAccessSubsystem system = new DataAccessSubsystemFacade();
+    	
+    	system.atomicRead(this);
+    	
+        return types;       
     }
     
     public void buildQuery() {
@@ -44,6 +51,16 @@ public class DbClassCatalogTypes implements IDbClass {
         types = new CatalogTypes();
         //IMPLEMENT
         
+        try {
+        	while (resultSet.next()) {
+    			Integer id = resultSet.getInt("catalogid");
+    			String name = resultSet.getString("catalogname");
+    			
+    			types.addCatalog(id, name);
+    		}
+		} catch (SQLException e) {
+			throw new DatabaseException("CatalogType could not be populated with database data");
+		}
     }
 
     public String getDbUrl() {

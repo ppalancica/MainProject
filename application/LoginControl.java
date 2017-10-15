@@ -68,16 +68,18 @@ public class LoginControl {
 
         
     }
-    private void authenticate(Integer id, String pwd) {
-        try {
+    private void authenticate(String id, String pwd) {
+    	try {
+    		Integer idAsInteger = Integer.parseInt(loginWindow.getCustId());
+        	
             //authenticate
-            Login login = new Login(id,pwd);
+            Login login = new Login(idAsInteger, pwd);
             DbClassLogin dbClass = new DbClassLogin(login);
             boolean authenticated = dbClass.authenticate();
         
             //if authenticated, load customer subsystem
-            if(authenticated){
-                loadCustomer(id);
+            if (authenticated){
+                loadCustomer(idAsInteger);
                 JOptionPane.showMessageDialog(loginWindow,                                                    
                         "Login successful",
                         "Success", 
@@ -86,8 +88,13 @@ public class LoginControl {
             else {
                 throw new UserException("Either id or password is incorrect.");
             }
-        }
-        catch(EBazaarException e){
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(loginWindow,                                                    
+                    "Customer id must be an Integer number",
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+			loginWindow.setVisible(true);
+		} catch(EBazaarException e){
             JOptionPane.showMessageDialog(loginWindow,                                                    
                         "Error: "+e.getMessage(),
                         "Error", 
@@ -108,9 +115,16 @@ public class LoginControl {
 	class SubmitListener implements ActionListener {
         public void actionPerformed(ActionEvent evt) {
             loginWindow.setVisible(false);
-        	Integer id = Integer.parseInt(loginWindow.getCustId());
+
+            String id = loginWindow.getCustId();
         	String pwd = loginWindow.getPassword();
-       	    authenticate(id,pwd);
+       	    
+        	authenticate(id, pwd);
+            
+//        	Integer id = Integer.parseInt(loginWindow.getCustId());
+//        	String pwd = loginWindow.getPassword();
+//       	    authenticate(id,pwd);
+       	    
        	    loginWindow.dispose();
        	    if(controller != null){
        	    	Boolean loggedIn = (Boolean)SessionContext.getInstance().get(CustomerConstants.LOGGED_IN);

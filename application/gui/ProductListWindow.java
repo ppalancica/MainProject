@@ -5,6 +5,11 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Window;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -15,6 +20,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+
+import middleware.DatabaseException;
+import business.externalinterfaces.ICatalogTypes;
+import business.externalinterfaces.IProductFromDb;
+import business.productsubsystem.CatalogTypes;
+import business.productsubsystem.DbClassCatalogTypes;
+import business.productsubsystem.DbClassProduct;
 
 import application.BrowseAndSelectController;
 import application.GuiUtil;
@@ -44,7 +56,7 @@ public class ProductListWindow extends JInternalFrame implements ParentWindow {
 	
 	//should be set to 'false' if data for table is obtained from a database
 	//or some external file
-	private final boolean USE_DEFAULT_DATA = true;
+	private final boolean USE_DEFAULT_DATA = false;
 	private final String SELECT = "Select";
 	private final String BACK = "Back";
 	
@@ -184,10 +196,57 @@ public class ProductListWindow extends JInternalFrame implements ParentWindow {
 	 */
 	private void updateModel() {
 		List<String[]> theData = new ArrayList<String[]>();
-        if(USE_DEFAULT_DATA) {
+        
+		if (USE_DEFAULT_DATA) {
 			DefaultData dd = DefaultData.getInstance();
 			theData = dd.getCatalogWindowData(catalogType);
-        }
+        } else {
+        	// Steps:
+        	
+            // step 1: read the catalogid that goes with
+            // the catalogname in the CatalogType table        
+        	        	
+        	Integer catalogId = null;
+        	
+        	try {        		
+        		catalogId = new DbClassCatalogTypes().getCatalogTypes().getCatalogId(catalogType);
+        		
+        		System.out.println("catalogId " + catalogId);
+        		
+			} catch (DatabaseException e) {
+				System.out.println("Could not get Catalog names");
+			}
+			
+			if (catalogId == null) {
+				return;
+			}
+
+        	// step 2: extract all product names that go with
+        	// this catalogid in the Product table, and add them to
+        	// the list theData
+    					
+			List<IProductFromDb> productList;
+			
+			try {        		
+				productList = new DbClassProduct().readProductList(catalogId);
+				
+				for (IProductFromDb product : productList) {
+					theData.add(new String[] { product.getProductName() });
+				}
+				
+				System.out.println("productList = " + productList);
+			} catch (DatabaseException e) {
+				System.out.println("Could not get Product names");
+			}
+
+        	// Warning: updateModel is expecting a list is of type List<String[]>
+        	// Therefore, each time you add a product name to the list
+        	// you must add it as a 1-element array
+        	// Example:
+        	//   String aProductName = //read from Product table
+        	//   theData.add(new String[]{aProductName});
+        }		
+		
 		updateModel(theData);
  	}		
 	
