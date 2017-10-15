@@ -24,9 +24,11 @@ import javax.swing.JTable;
 import middleware.DatabaseException;
 import business.externalinterfaces.ICatalogTypes;
 import business.externalinterfaces.IProductFromDb;
+import business.externalinterfaces.IProductSubsystem;
 import business.productsubsystem.CatalogTypes;
 import business.productsubsystem.DbClassCatalogTypes;
 import business.productsubsystem.DbClassProduct;
+import business.productsubsystem.ProductSubsystemFacade;
 
 import application.BrowseAndSelectController;
 import application.GuiUtil;
@@ -201,50 +203,20 @@ public class ProductListWindow extends JInternalFrame implements ParentWindow {
 			DefaultData dd = DefaultData.getInstance();
 			theData = dd.getCatalogWindowData(catalogType);
         } else {
-        	// Steps:
-        	
-            // step 1: read the catalogid that goes with
-            // the catalogname in the CatalogType table        
-        	        	
-        	Integer catalogId = null;
-        	
-        	try {        		
-        		catalogId = new DbClassCatalogTypes().getCatalogTypes().getCatalogId(catalogType);
-        		
-        		System.out.println("catalogId " + catalogId);
-        		
-			} catch (DatabaseException e) {
-				System.out.println("Could not get Catalog names");
-			}
-			
-			if (catalogId == null) {
-				return;
-			}
-
-        	// step 2: extract all product names that go with
-        	// this catalogid in the Product table, and add them to
-        	// the list theData
-    					
+    		
+        	ProductSubsystemFacade system = new ProductSubsystemFacade();
 			List<IProductFromDb> productList;
 			
-			try {        		
-				productList = new DbClassProduct().readProductList(catalogId);
+			try {				
+				productList = system.getProductList(catalogType);
 				
 				for (IProductFromDb product : productList) {
 					theData.add(new String[] { product.getProductName() });
 				}
-				
-				System.out.println("productList = " + productList);
 			} catch (DatabaseException e) {
-				System.out.println("Could not get Product names");
+				System.out.println("Could not get Catalog or Product names");
+				System.out.println("Error: " + e.getMessage());
 			}
-
-        	// Warning: updateModel is expecting a list is of type List<String[]>
-        	// Therefore, each time you add a product name to the list
-        	// you must add it as a 1-element array
-        	// Example:
-        	//   String aProductName = //read from Product table
-        	//   theData.add(new String[]{aProductName});
         }		
 		
 		updateModel(theData);

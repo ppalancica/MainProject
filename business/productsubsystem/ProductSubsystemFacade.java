@@ -42,13 +42,20 @@ public class ProductSubsystemFacade implements IProductSubsystem {
 	//you can remove comments from body of ComboListener.
 	public List<IProductFromDb> getProductList(String catType) throws DatabaseException {
 		//IMPLEMENT
-		return new ArrayList<IProductFromDb>();
+		
+		Integer catalogId = getCatalogIdFromType(catType);
+		
+		List<IProductFromDb> productList = new DbClassProduct().readProductList(catalogId);
+		
+		return productList;
 	}
 
-	
 	public Integer getCatalogIdFromType(String catType) throws DatabaseException {
-		return 0;
+		Integer catalogId = new DbClassCatalogTypes().getCatalogTypes().getCatalogId(catType);
+		
+		return catalogId;
 	}
+	
 	public void saveNewProduct(IProductFromGui product, String catalogType) throws DatabaseException {
 		//get catalogid
 		Integer catalogid = getCatalogIdFromType(catalogType); 
