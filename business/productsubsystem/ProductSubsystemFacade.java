@@ -81,11 +81,11 @@ public class ProductSubsystemFacade implements IProductSubsystem {
 	public void saveNewProduct(IProductFromGui product, String catalogType) throws DatabaseException {
 		//get catalogid
 		Integer catalogid = getCatalogIdFromType(catalogType); 
-				//invent description
+		//invent description
 		String description = DEFAULT_PROD_DESCRIPTION;
 		DbClassProduct dbclass = new DbClassProduct();
-		dbclass.saveNewProduct(product, catalogid,description);
 		
+		dbclass.saveNewProduct(product, catalogid, description);
 	}
 	/* reads quantity avail and stores in the Quantity argument */
 	public void readQuantityAvailable(String prodName, Quantity quantity) throws DatabaseException {

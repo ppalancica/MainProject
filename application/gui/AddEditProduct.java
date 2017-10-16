@@ -46,11 +46,35 @@ public class AddEditProduct extends JInternalFrame implements ParentWindow, ICom
 	private JTextField quantityField;
 	String[] fldNames = DefaultData.FIELD_NAMES;
 	
+	public String productNameValue() {
+		return productNameField.getText();
+	}
+	
+	public String catalogGroupValue() {
+		return (String) catalogGroupField.getSelectedItem();
+	}
+	
+	public String pricePerUnitFieldValue() {
+		return pricePerUnitField.getText();
+	}
+	
+	public String mfgDateFieldValue() {
+		return mfgDateField.getText();
+	}
+	
+	public String quantityFieldValue() {
+		return quantityField.getText();
+	}
+	
 	/** group is "Books", "Clothes" etc */
 	private String catalogGroup;
 	
 	/** value is "Add New" or "Edit" */
 	private String addOrEdit = GuiUtil.ADD_NEW;
+	
+	public String getAddOrEdit() {
+		return addOrEdit;
+	}
 	
 	/** convenience method to determine which mode,add or edit */
 	private boolean isEditMode() {

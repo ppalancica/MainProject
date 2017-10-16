@@ -41,23 +41,35 @@ public class DbClassProduct implements IDbClass {
 	Integer productId;
 
 	private final String LOAD_PROD_TABLE = "LoadProdTable";
+	private final String CREATE_PRODUCT = "CreateProduct";
 	private final String READ_PRODUCT = "ReadProduct";
 	private final String READ_PROD_LIST = "ReadProdList";
 	
-
 	public void buildQuery() {
 		if (queryType.equals(LOAD_PROD_TABLE)) {
 			buildProdTableQuery();
+		} else if (queryType.equals(CREATE_PRODUCT)) {
+			buildCreateProductQuery();
 		} else if (queryType.equals(READ_PRODUCT)) {
 			buildReadProductQuery();
 		} else if (queryType.equals(READ_PROD_LIST)) {
 			buildProdListQuery();
-		} 
-
+		}
 	}
 
 	private void buildProdTableQuery() {
 		query = "SELECT * FROM product";
+	}
+	
+	private void buildCreateProductQuery() {
+		query = String.format("INSERT INTO Product VALUES (NULL, %d, '%s', '%s', '%s', '%s', '%s')",
+				this.catalogId,
+				this.prodFromGui.getProductName(),
+				this.prodFromGui.getQuantityAvail(),
+				this.prodFromGui.getUnitPrice(),
+				this.prodFromGui.getMfgDate(),
+				((Product)this.prodFromGui).getDescription()
+		);
 	}
 
 	private void buildProdListQuery() {
@@ -121,14 +133,24 @@ public class DbClassProduct implements IDbClass {
 	 * Database columns: productid, productname, totalquantity, priceperunit,
 	 * mfgdate, catalogid, description
 	 */
-	public void saveNewProduct(IProductFromGui product, Integer catalogid,
-			String description) throws DatabaseException {
+	public void saveNewProduct(IProductFromGui product, Integer catalogid, String description)
+		throws DatabaseException {
 		//IMPLEMENT
+		
+		this.prodFromGui = product;
+		((Product) this.prodFromGui).setDescription(description);
+		this.catalogId = catalogid;
+		
+    	queryType = CREATE_PRODUCT;
+    	
+    	dataAccessSS.saveWithinTransaction(this);
 	}
 
 	public void populateEntity(ResultSet resultSet) throws DatabaseException {
 		if (queryType.equals(LOAD_PROD_TABLE)) {
 			populateProdTable(resultSet);
+		} else if (queryType.equals(CREATE_PRODUCT)) {
+			populateProduct(resultSet);
 		} else if (queryType.equals(READ_PRODUCT)) {
 			populateProduct(resultSet);
 		} else if (queryType.equals(READ_PROD_LIST)) {

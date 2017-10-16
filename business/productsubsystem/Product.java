@@ -5,7 +5,7 @@ import business.externalinterfaces.IProductFromDb;
 import business.externalinterfaces.IProductFromGui;
 
 
-class Product implements IProductFromDb, IProductFromGui {
+public class Product implements IProductFromDb, IProductFromGui {
 
     private Integer productId;
     private String productName;
@@ -26,7 +26,7 @@ class Product implements IProductFromDb, IProductFromGui {
         description = d;
     }
     //this constructor is used when getting user-entered data in adding a new product
-    Product(String name, String date, String numAvail, String price){
+    public Product(String name, String date, String numAvail, String price){
     	this(null, name, numAvail, price, date, null, null);
     }
     /**
@@ -70,5 +70,9 @@ class Product implements IProductFromDb, IProductFromGui {
      */
     public String getDescription() {
         return description;
+    }
+    
+    public void setDescription(String description) {
+    	this.description = description;
     }
 }

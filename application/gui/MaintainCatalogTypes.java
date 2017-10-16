@@ -176,8 +176,7 @@ public class MaintainCatalogTypes extends JInternalFrame implements ParentWindow
         updateModel(theData);
 	}	
 
-	public void syncUserInterfaceToReflectLatestModelChanges()
-	{
+	public void syncUserInterfaceToReflectLatestModelChanges() {
 		model = null;
 		updateModel();
 	}

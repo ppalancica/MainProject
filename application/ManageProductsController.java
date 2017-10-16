@@ -26,7 +26,9 @@ import application.gui.MaintainCatalogTypes;
 import application.gui.MaintainProductCatalog;
 import business.SessionContext;
 import business.externalinterfaces.CustomerConstants;
+import business.externalinterfaces.IProductFromGui;
 import business.externalinterfaces.IProductSubsystem;
+import business.productsubsystem.Product;
 import business.productsubsystem.ProductSubsystemFacade;
 
 public class ManageProductsController implements CleanupControl {
@@ -272,10 +274,7 @@ public class ManageProductsController implements CleanupControl {
 	// control AddEditCatalog
 	class SaveAddEditCatListener implements ActionListener {
 		
-		public void actionPerformed(ActionEvent evt) {
-			
-			System.out.println("");
-			
+		public void actionPerformed(ActionEvent evt) {			
 			ProductSubsystemFacade system = new ProductSubsystemFacade();
 			
 			String action = addEditCatalog.getAddOrEdit();
@@ -331,11 +330,50 @@ public class ManageProductsController implements CleanupControl {
 	// // control AddEditProduct
 
 	class SaveAddEditProductListener implements ActionListener {
+		
 		public void actionPerformed(ActionEvent evt) {
-			JOptionPane.showMessageDialog(addEditProduct,
-					"Need to write code for this!", "Information",
-					JOptionPane.INFORMATION_MESSAGE);
+			
+			String catalogName = addEditProduct.catalogGroupValue();
+				
+//				(String) ((JComboBox) evt.getSource())
+//			.getSelectedItem();
 
+			ProductSubsystemFacade system = new ProductSubsystemFacade();
+			
+			String action = addEditProduct.getAddOrEdit();
+			
+			try {
+				if (action.equals(GuiUtil.ADD_NEW)) {
+					
+					String name = addEditProduct.productNameValue();
+					String date = addEditProduct.mfgDateFieldValue();
+					String numAvail = addEditProduct.quantityFieldValue();
+					String price = addEditProduct.pricePerUnitFieldValue();
+					
+					IProductFromGui product = new Product(name, date, numAvail, price);
+					
+					system.saveNewProduct(product, catalogName);
+					
+					closeWindowAndSyncUI();
+
+				} else if (action.equals(GuiUtil.EDIT)) {
+					
+				}
+			} catch (DatabaseException e) {
+				System.out.println("Error: " + e.getMessage());
+				
+				JOptionPane.showMessageDialog(addEditProduct,
+						"Error!",
+						"Something went wrong. Could not save data!",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+		}
+		
+		private void closeWindowAndSyncUI() {
+			maintainProductCatalog.setVisible(true);
+			addEditProduct.dispose();
+			
+			maintainProductCatalog.syncUserInterfaceToReflectLatestModelChanges();
 		}
 	}
 

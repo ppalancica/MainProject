@@ -24,7 +24,6 @@ import javax.swing.JWindow;
 import middleware.DatabaseException;
 
 import business.externalinterfaces.CustomerConstants;
-import business.externalinterfaces.IProductFromDb;
 import business.productsubsystem.ProductSubsystemFacade;
 
 import application.GuiUtil;
@@ -252,6 +251,11 @@ public class MaintainProductCatalog extends JInternalFrame implements ParentWind
         	
 		updateModel(theData);
  	}	
+	
+	public void syncUserInterfaceToReflectLatestModelChanges() {
+		model = null;
+		updateModel();
+	}
 	
     private void updateTable() {
         
