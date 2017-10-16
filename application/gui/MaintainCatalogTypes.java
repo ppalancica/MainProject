@@ -18,7 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import middleware.DatabaseException;
-import business.productsubsystem.DbClassCatalogTypes;
+import business.productsubsystem.ProductSubsystemFacade;
 
 import application.GuiUtil;
 import application.ManageProductsController;
@@ -160,19 +160,14 @@ public class MaintainCatalogTypes extends JInternalFrame implements ParentWindow
 		updateTable();
 	}	
 	
-
 	public void updateModel() {
-		
 		List<String[]> theData = new ArrayList<String[]>();
 		
         if (USE_DEFAULT_DATA) {			        	
         	theData = DefaultData.getCatalogTypes();
-			
         } else {
-        	DbClassCatalogTypes dbClass = new DbClassCatalogTypes();
-        	
         	try {
-        		theData = dbClass.getCatalogTypes().getCatalogNames();
+        		theData = new ProductSubsystemFacade().getCatalogNames();
 			} catch (DatabaseException e) {
 				System.out.println("Could not get Catalog names");
 			}

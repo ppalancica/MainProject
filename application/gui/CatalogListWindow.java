@@ -171,11 +171,9 @@ public class CatalogListWindow extends JInternalFrame implements ParentWindow {
 		
         if (USE_DEFAULT_DATA) {
 			theData = DefaultData.getCatalogTypes();
-        } else {
-        	DbClassCatalogTypes dbClass = new DbClassCatalogTypes();
-        	
+        } else {        	
         	try {
-        		theData = dbClass.getCatalogTypes().getCatalogNames();
+        		theData = new ProductSubsystemFacade().getCatalogNames();
 			} catch (DatabaseException e) {
 				System.out.println("Could not get Catalog names");
 			}

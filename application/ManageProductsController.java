@@ -264,8 +264,6 @@ public class ManageProductsController implements CleanupControl {
 	// control AddEditCatalog
 	class SaveAddEditCatListener implements ActionListener {
 		
-		
-		
 		public void actionPerformed(ActionEvent evt) {
 			
 			System.out.println("");
