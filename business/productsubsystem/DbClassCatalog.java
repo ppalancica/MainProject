@@ -19,6 +19,7 @@ public class DbClassCatalog implements IDbClass {
     private String queryType;
     private final String SAVE = "Save";
     private final String UPDATE = "Update";
+    private final String DELETE = "Delete";
     
     private IDataAccessSubsystem dataAccessSS = new DataAccessSubsystemFacade();
     
@@ -39,11 +40,21 @@ public class DbClassCatalog implements IDbClass {
     	dataAccessSS.saveWithinTransaction(this);
     }
     
+    public void deleteCatalog(String name) throws DatabaseException {
+    	//IMPLEMENT
+    	catalogName = name;
+    	queryType = DELETE;
+    	
+    	dataAccessSS.deleteWithinTransaction(this);
+    }
+    
 	public void buildQuery() throws DatabaseException {
 		if (queryType.equals(SAVE)) {
 			buildSaveQuery();
 		} else if (queryType.equals(UPDATE)) {
 			buildUpdateQuery();
+		} else if (queryType.equals(DELETE)) {
+			buildDeleteQuery();
 		}
 	}
 	
@@ -54,8 +65,12 @@ public class DbClassCatalog implements IDbClass {
 	
 	void buildUpdateQuery() throws DatabaseException {
 		//IMPLEMENT
-		query = "";
 		query = String.format("UPDATE CatalogType SET catalogName='%s' WHERE catalogName='%s'", catalogNameToUpdate, catalogName);
+	}
+	
+	void buildDeleteQuery() throws DatabaseException {
+		//IMPLEMENT
+		query = String.format("DELETE FROM CatalogType WHERE catalogName='%s'", catalogName);
 	}
 
 	public String getDbUrl() {

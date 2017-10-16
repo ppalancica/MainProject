@@ -67,6 +67,11 @@ public class ProductSubsystemFacade implements IProductSubsystem {
 		dbClass.updateCatalogName(currentName, newName);
 	}
 	
+	public void deleteCatalogName(String name) throws DatabaseException {
+		DbClassCatalog dbClass = new DbClassCatalog();
+		dbClass.deleteCatalog(name);
+	}
+	
 	public Integer getCatalogIdFromType(String catType) throws DatabaseException {
 		Integer catalogId = new DbClassCatalogTypes().getCatalogTypes().getCatalogId(catType);
 		

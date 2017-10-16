@@ -70,24 +70,32 @@ public class ManageProductsController implements CleanupControl {
 	}
 
 	class DeleteCatalogListener implements ActionListener {
+		
 		final String ERROR_MESSAGE = "Please select a row.";
 		final String ERROR = "Error";
 
 		public void actionPerformed(ActionEvent evt) {
 			JTable table = maintainCatalogTypes.getTable();
 			int selectedRow = table.getSelectedRow();
+			CustomTableModel model = maintainCatalogTypes.getModel();
+			
 			if (selectedRow >= 0) {
 				// Students: code goes here.
-				JOptionPane.showMessageDialog(maintainCatalogTypes,
-						"Need to write code for this!", "Information",
-						JOptionPane.INFORMATION_MESSAGE);
-
+				String selectedType = (String) model.getValueAt(selectedRow, 0);
+				
+				try {
+					new ProductSubsystemFacade().deleteCatalogName(selectedType);
+					maintainCatalogTypes.syncUserInterfaceToReflectLatestModelChanges();
+				} catch (DatabaseException e) {
+					JOptionPane.showMessageDialog(maintainCatalogTypes,
+							"Error!",
+							"Something went wrong. Could not delete data!",
+							JOptionPane.INFORMATION_MESSAGE);
+				}
 			} else {
 				JOptionPane.showMessageDialog(maintainCatalogTypes,
 						ERROR_MESSAGE, ERROR, JOptionPane.ERROR_MESSAGE);
-
 			}
-
 		}
 	}
 
