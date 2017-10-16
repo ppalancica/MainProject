@@ -50,6 +50,11 @@ public class ProductSubsystemFacade implements IProductSubsystem {
 		return productList;
 	}
 
+	public void saveNewCatalogWithName(String name) throws DatabaseException {
+		DbClassCatalog dbClass = new DbClassCatalog();
+		dbClass.saveNewCatalog(name);
+	}
+	
 	public Integer getCatalogIdFromType(String catType) throws DatabaseException {
 		Integer catalogId = new DbClassCatalogTypes().getCatalogTypes().getCatalogId(catType);
 		

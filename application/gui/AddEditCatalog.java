@@ -36,8 +36,18 @@ public class AddEditCatalog extends JInternalFrame implements ParentWindow {
 	/** catalogGroup has possible values "Books", "Clothes" etc */
 	private String catalogGroup;
 	
+	public String getCatalogOrProductFieldText()
+	{
+		return productNameField.getText();
+	}
+	
 	/** value is "Add New" or "Edit" */
 	private String addOrEdit = GuiUtil.ADD_NEW;
+	
+	public String getAddOrEdit()
+	{
+		return addOrEdit;
+	}
 	
 	private static String makeTitle(String addEdit) {
 		return addEdit + mainLabel;

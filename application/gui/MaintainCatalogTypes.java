@@ -161,7 +161,7 @@ public class MaintainCatalogTypes extends JInternalFrame implements ParentWindow
 	}	
 	
 
-	private void updateModel() {
+	public void updateModel() {
 		
 		List<String[]> theData = new ArrayList<String[]>();
 		
@@ -181,7 +181,11 @@ public class MaintainCatalogTypes extends JInternalFrame implements ParentWindow
         updateModel(theData);
 	}	
 
-	
+	public void syncUserInterfaceToReflectLatestModelChanges()
+	{
+		model = null;
+		updateModel();
+	}
 	
     private void updateTable() {
     	if(model != null && table !=null) {

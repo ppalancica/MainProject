@@ -263,11 +263,37 @@ public class ManageProductsController implements CleanupControl {
 
 	// control AddEditCatalog
 	class SaveAddEditCatListener implements ActionListener {
+		
 		public void actionPerformed(ActionEvent evt) {
-			JOptionPane.showMessageDialog(addEditCatalog,
-					"Need to write code for this!", "Information",
-					JOptionPane.INFORMATION_MESSAGE);
-
+				
+			ProductSubsystemFacade system = new ProductSubsystemFacade();
+			
+			String action = addEditCatalog.getAddOrEdit();
+			String catalogName = addEditCatalog.getCatalogOrProductFieldText();
+			
+			try {
+				if (action.equals(GuiUtil.ADD_NEW)) {
+					system.saveNewCatalogWithName(catalogName);
+					
+					
+					
+					maintainCatalogTypes.setVisible(true);
+					addEditCatalog.dispose();
+					
+					maintainCatalogTypes.syncUserInterfaceToReflectLatestModelChanges();
+				} else if (action.equals(GuiUtil.EDIT)) {
+					
+					maintainCatalogTypes.setVisible(true);
+					addEditCatalog.dispose();
+				}
+			} catch (DatabaseException e) {
+				System.out.println("Error: " + e.getMessage());
+				
+				JOptionPane.showMessageDialog(addEditCatalog,
+						"Error!",
+						"Something went wrong. Could not save data!",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
 		}
 	}
 
