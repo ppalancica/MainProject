@@ -55,6 +55,11 @@ public class ProductSubsystemFacade implements IProductSubsystem {
 		dbClass.saveNewCatalog(name);
 	}
 	
+	public void updateCatalogName(String currentName, String newName) throws DatabaseException {
+		DbClassCatalog dbClass = new DbClassCatalog();
+		dbClass.updateCatalogName(currentName, newName);
+	}
+	
 	public Integer getCatalogIdFromType(String catType) throws DatabaseException {
 		Integer catalogId = new DbClassCatalogTypes().getCatalogTypes().getCatalogId(catType);
 		

@@ -264,8 +264,12 @@ public class ManageProductsController implements CleanupControl {
 	// control AddEditCatalog
 	class SaveAddEditCatListener implements ActionListener {
 		
+		
+		
 		public void actionPerformed(ActionEvent evt) {
-				
+			
+			System.out.println("");
+			
 			ProductSubsystemFacade system = new ProductSubsystemFacade();
 			
 			String action = addEditCatalog.getAddOrEdit();
@@ -274,17 +278,19 @@ public class ManageProductsController implements CleanupControl {
 			try {
 				if (action.equals(GuiUtil.ADD_NEW)) {
 					system.saveNewCatalogWithName(catalogName);
-					
-					
-					
-					maintainCatalogTypes.setVisible(true);
-					addEditCatalog.dispose();
-					
-					maintainCatalogTypes.syncUserInterfaceToReflectLatestModelChanges();
+					closeWindowAndSyncUI();
 				} else if (action.equals(GuiUtil.EDIT)) {
+					JTable table = maintainCatalogTypes.getTable();
+					CustomTableModel model = maintainCatalogTypes.getModel();
+					int selectedRow = table.getSelectedRow();
 					
-					maintainCatalogTypes.setVisible(true);
-					addEditCatalog.dispose();
+					// No need to check selectedRow >= 0, because we did that before getting to this screen.
+					// We know for sure it is >= 0.
+					String selectedType = (String) model.getValueAt(selectedRow, 0);
+										
+					system.updateCatalogName(selectedType, catalogName);
+					
+					closeWindowAndSyncUI();
 				}
 			} catch (DatabaseException e) {
 				System.out.println("Error: " + e.getMessage());
@@ -294,6 +300,13 @@ public class ManageProductsController implements CleanupControl {
 						"Something went wrong. Could not save data!",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
+		}
+		
+		private void closeWindowAndSyncUI() {
+			maintainCatalogTypes.setVisible(true);
+			addEditCatalog.dispose();
+			
+			maintainCatalogTypes.syncUserInterfaceToReflectLatestModelChanges();
 		}
 	}
 

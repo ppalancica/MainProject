@@ -13,6 +13,7 @@ import middleware.externalinterfaces.DbConfigKey;
 public class DbClassCatalog implements IDbClass {
 	
 	private String catalogName;
+	private String catalogNameToUpdate;
 	
 	private String query;
     private String queryType;
@@ -25,6 +26,15 @@ public class DbClassCatalog implements IDbClass {
     	//IMPLEMENT
     	catalogName = name;
     	queryType = SAVE;
+    	
+    	dataAccessSS.saveWithinTransaction(this);
+    }
+    
+    public void updateCatalogName(String currentName, String newName) throws DatabaseException {
+    	//IMPLEMENT
+    	catalogName = currentName;
+    	catalogNameToUpdate = newName;
+    	queryType = UPDATE;
     	
     	dataAccessSS.saveWithinTransaction(this);
     }
@@ -44,7 +54,8 @@ public class DbClassCatalog implements IDbClass {
 	
 	void buildUpdateQuery() throws DatabaseException {
 		//IMPLEMENT
-		query = ""; 
+		query = "";
+		query = String.format("UPDATE CatalogType SET catalogName='%s' WHERE catalogName='%s'", catalogNameToUpdate, catalogName);
 	}
 
 	public String getDbUrl() {
