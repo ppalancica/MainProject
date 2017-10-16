@@ -41,20 +41,25 @@ public class ProductUtil {
         return returnValue;
         
     }
+    
     //this is used in the Product manager use case
     public static String[] extractProdInfoForManager(IProductFromDb product){
     	//IMPLEMENT
-    	return new String[]{"product_name", "unit_price", "mgf_date", "quantity_avail"};
-        
-        
+    	return new String[] {
+				product.getProductName(),
+				product.getUnitPrice(),
+				product.getMfgDate(),
+				product.getQuantityAvail()
+    	};
     }
+
     public static List<String[]> extractProductInfoForManager(List<IProductFromDb> list) {
-    	int size = list.size();
-    	ArrayList retList = new ArrayList();
-    	for(IProductFromDb prod : list) {
+    	List<String[]> retList = new ArrayList<String[]>();
+    	
+    	for (IProductFromDb prod : list) {
     		retList.add(extractProdInfoForManager(prod));
     	}
-    	return retList;
     	
+    	return retList;
     }
 }

@@ -49,7 +49,7 @@ public class ProductSubsystemFacade implements IProductSubsystem {
 		
 		return productList;
 	}
-
+	
 	public List<String[]> getCatalogNames() throws DatabaseException {
 		
 		DbClassCatalogTypes dbClass = new DbClassCatalogTypes();

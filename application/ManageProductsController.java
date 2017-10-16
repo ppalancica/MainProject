@@ -357,27 +357,31 @@ public class ManageProductsController implements CleanupControl {
 			// if(mainFrame != null) mainFrame.setVisible(false);
 			String selectedValue = (String) ((JComboBox) evt.getSource())
 					.getSelectedItem();
-			IProductSubsystem prodSS = new ProductSubsystemFacade();
+			
+			ProductSubsystemFacade prodSS = new ProductSubsystemFacade();
 			
 			//IMPLEMENT
-			/* will work when ProductSubsystemFacade is completed
-			List<String[]> associatedProducts = business.util.ProductUtil
-					.extractProductInfoForManager(prodSS
-							.getProductList(selectedValue));*/
-			List<String[]> associatedProducts = new ArrayList<String[]>();
-			for (IComboObserver o : observers) {
-				if (o != null) {
-					o.setCatalogGroup(selectedValue);
-					o.refreshData();
+			// will work when ProductSubsystemFacade is completed
+			
+			try {
+				List<String[]> associatedProducts = business.util.ProductUtil
+					.extractProductInfoForManager(prodSS.getProductList(selectedValue));
+				
+				for (IComboObserver o : observers) {
+					if (o != null) {
+						o.setCatalogGroup(selectedValue);
+						o.refreshData();
+					}
 				}
+				
+				if (maintainProductCatalog != null) {
+					maintainProductCatalog.updateModel(associatedProducts);
+					maintainProductCatalog.repaint();
+				}
+			} catch (Exception e) {
+				System.out.println("Could not load data for the selected Catalog");
 			}
-			if (maintainProductCatalog != null) {
-				maintainProductCatalog.updateModel(associatedProducts);
-				maintainProductCatalog.repaint();
-			}
-		
 		}
-
 	}
 
 	// /////// PUBLIC INTERFACE -- for getting instances of listeners ///

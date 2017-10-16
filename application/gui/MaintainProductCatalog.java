@@ -21,7 +21,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JWindow;
 
+import middleware.DatabaseException;
+
 import business.externalinterfaces.CustomerConstants;
+import business.externalinterfaces.IProductFromDb;
+import business.productsubsystem.ProductSubsystemFacade;
 
 import application.GuiUtil;
 import application.IComboObserver;
@@ -53,7 +57,7 @@ public class MaintainProductCatalog extends JInternalFrame implements ParentWind
 	String catalogGroup=DEFAULT_CATALOG;
 	
 	//constants
-	private final boolean USE_DEFAULT_DATA = true;
+	private final boolean USE_DEFAULT_DATA = false;
 
     private final String NAME = "Name";
     private final String PRICE = "Unit Price";
@@ -232,10 +236,20 @@ public class MaintainProductCatalog extends JInternalFrame implements ParentWind
 	 */
 	private void updateModel() {
 		List<String[]> theData = new ArrayList<String[]>();
-        if(USE_DEFAULT_DATA) {
+		
+        if (USE_DEFAULT_DATA) {
 			DefaultData dd = DefaultData.getInstance();
 			theData = dd.getProductCatalogChoices(catalogGroup);
+        } else {
+        	try { 
+        		theData = business.util.ProductUtil.extractProductInfoForManager(
+        				new ProductSubsystemFacade().getProductList(catalogGroup)
+        		);
+			} catch (DatabaseException e) {
+				System.out.println("Could not get Catalog Products details");
+			}
         }
+        	
 		updateModel(theData);
  	}	
 	
